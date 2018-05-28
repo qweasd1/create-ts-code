@@ -1,0 +1,18 @@
+{
+  "compilerOptions": {
+    "sourceRoot": "./src",
+    "outDir": "./lib/",
+    "noImplicitAny": false,
+    "sourceMap": true,
+    "module": "commonjs",
+    "target": "esnext",
+    "allowJs": false,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata":true,
+    "types": ["node","es6-collections","jest"],
+    "declaration": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ]
+  }
+}
