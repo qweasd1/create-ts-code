@@ -5,6 +5,10 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/qweasd1/create-ts-code"
+  },
   "author": "",
   "license": "MIT",
   "main": "lib/src/index.js",
