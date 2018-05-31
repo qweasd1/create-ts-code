@@ -1,14 +1,22 @@
 import {CreateCodeConfig, TsMultilineNodeFactory, If, TsNode} from "./TsNodeFactory";
 import {tsNodeToLines} from "./util";
+import {TsArray} from "../interface/TsArray";
+import {InternalFileContext} from "../syntax/syntax";
+import {TsChainFunctionFactory} from "./TsChainFunctionFactory";
+import {TsFunctionDeclarationFactory} from "./TsFunctionDeclarationFactory";
 
-export class TsArrayFactory extends TsMultilineNodeFactory {
+export class TsArrayFactory extends TsMultilineNodeFactory<TsArrayFactory> implements TsArray{
 
+
+  public arrayLiteral: TsNode[] = []
+  public context:InternalFileContext
 
   leftBracket = "["
   rightBracket = "]"
 
-  constructor(public arrayLiteral: TsNode[] = [], mode: "array" | "arguments" = "array") {
+  constructor(arrayLiteral: TsNode[] = [], mode: "array" | "arguments" = "array") {
     super()
+    this.push(...arrayLiteral)
     // this mode is used to generate function calling or function declaration
     if (mode === "arguments") {
       this.leftBracket = "("
@@ -16,7 +24,8 @@ export class TsArrayFactory extends TsMultilineNodeFactory {
     }
   }
 
-  public createCodeLines(config: CreateCodeConfig): string[] {
+  _createCodeLines(config: CreateCodeConfig): string[] {
+
     if (this.isMultiline) {
       const result = [this.leftBracket]
       this.arrayLiteral.forEach((x, index) => {
@@ -60,9 +69,46 @@ export class TsArrayFactory extends TsMultilineNodeFactory {
 
 
   @If
-  add(...tsNodes: TsNode[]) {
+  push(...tsNodes: TsNode[]):TsArray {
     this.arrayLiteral.push(...tsNodes)
     return this
   }
+
+  // @If
+  // multiline(){
+  //   this.isMultiline = true
+  //   return this
+  // }
+  //
+  // @If
+  // singleline(){
+  //   this.isMultiline = false
+  //   return this
+  // }
+  //
+  // if(condition: boolean) {
+  //   this.isConditionTrue = condition
+  //   return this
+  // }
+  //
+  // endif() {
+  //   this.isConditionTrue = true
+  //   return this
+  // }
+  //
+  // else() {
+  //   this.isConditionTrue = !this.isConditionTrue
+  //   return this
+  // }
+  //
+  // emitWhen(condition: boolean): TsArray {
+  //   this.isEmit = condition
+  //   return this
+  // }
+  //
+  // loads(plugin: (self) => void): TsArray {
+  //   plugin(this)
+  //   return this
+  // }
 
 }

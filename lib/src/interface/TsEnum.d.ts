@@ -1,7 +1,5 @@
 import { TsNodeBody } from "../model/TsNodeFactory";
-export interface TsEnum {
+import { ITsNode } from "./TsNode";
+export interface TsEnum extends ITsNode<TsEnum> {
     body(tsNode: TsNodeBody): TsEnum;
-    if(condition: boolean): TsEnum;
-    else(): TsEnum;
-    endif(): TsEnum;
 }

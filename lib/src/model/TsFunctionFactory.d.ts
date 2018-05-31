@@ -1,5 +1,5 @@
 import { CreateCodeConfig, TsMultilineNodeFactory, TsNode } from "./TsNodeFactory";
-export declare type FunctionType = "function" | "arrow" | "get" | "set" | "method";
+export declare type FunctionType = "function" | "arrow" | "ref" | "set" | "method";
 export declare class TsFunctionFactory extends TsMultilineNodeFactory {
     name: string;
     type: FunctionType;

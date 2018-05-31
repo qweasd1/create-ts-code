@@ -1,11 +1,11 @@
-import {TsNode, TsNodeBody} from "../model/TsNodeFactory";
+import {TsNodeBody} from "../model/TsNodeFactory";
+import {ITsNode} from './TsNode';
 
-export interface TsClass {
+
+
+export interface TsClass extends ITsNode<TsClass>{
   implements(...interfaces:string[]):TsClass
   extends(...baseClasses:string[]):TsClass
   body(tsNode:TsNodeBody):TsClass
 
-  if(condition:boolean):TsClass
-  else():TsClass
-  endif():TsClass
 }

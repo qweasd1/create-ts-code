@@ -1,12 +1,15 @@
 import { CreateCodeConfig, TsMultilineNodeFactory, TsNode } from "./TsNodeFactory";
-export declare class TsObjectFactory extends TsMultilineNodeFactory {
+import { TsObject } from "../interface/TsObject";
+import { InternalFileContext } from "../syntax/syntax";
+export declare class TsObjectFactory extends TsMultilineNodeFactory<TsObjectFactory> implements TsObject {
+    context: InternalFileContext;
     objectLiteral: {
         [key: string]: TsNode;
     };
     constructor(objectLiteral?: {
         [key: string]: TsNode;
     });
-    createCodeLines(config: CreateCodeConfig): string[];
+    _createCodeLines(config: CreateCodeConfig): string[];
     set(key: string, value: TsNode): this;
     has(key: string): boolean;
 }

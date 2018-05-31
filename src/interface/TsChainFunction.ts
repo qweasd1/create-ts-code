@@ -1,14 +1,7 @@
 import {TsNode, TsNodeBody} from "../model/TsNodeFactory";
+import {ITsMultilineNode} from "./TsNode";
 
-export interface TsChainFunction {
-  call(functionName:string):TsChainFunction
-  with(...args:string[]):TsChainFunction
-  // directly concat with another string or node ()
-  chain(tsNode:TsNode):TsChainFunction
-
-  if(condition:boolean):TsChainFunction
-  else():TsChainFunction
-  endif():TsChainFunction
-  singleline():TsChainFunction
-  multiline():TsChainFunction
+export interface TsChainFunction extends ITsMultilineNode<TsChainFunction>{
+  invoke(path:string, ...args:TsNode[]):TsChainFunction
+  ref(name:string):TsChainFunction
 }

@@ -1,8 +1,33 @@
 import { CreateCodeConfig, TsNodeFactory, TsNode } from "./TsNodeFactory";
-export declare class TsConcatFactory extends TsNodeFactory {
-    prefix: TsNode;
-    following: TsNode;
+import { TsAbstractDeclaration, TsDeclaration, TsExportDeclaration, TsExportDefaultDeclaration, TsScopeDeclaration } from "../interface/TsDeclaration";
+import { TsInterface } from "../interface/TsInterface";
+import { TsEnum } from "../interface/TsEnum";
+import { TsClass } from "../interface/TsClass";
+import { TsFunctionDeclaration } from "../interface/TsFunctionDeclaration";
+import { InternalFileContext } from "../syntax/syntax";
+export declare class TsConcatFactory extends TsNodeFactory<TsConcatFactory> implements TsDeclaration, TsAbstractDeclaration, TsScopeDeclaration, TsExportDeclaration, TsExportDefaultDeclaration {
     tsNodes: TsNode[];
+    context: InternalFileContext;
+    constructor();
     concat(...tsNodes: TsNode[]): this;
-    createCodeLines(config: CreateCodeConfig): string[];
+    _createCodeLines(config: CreateCodeConfig): string[];
+    readonly static: TsScopeDeclaration;
+    readonly abstract: TsAbstractDeclaration;
+    readonly default: TsExportDefaultDeclaration;
+    readonly public: TsScopeDeclaration;
+    readonly protected: TsScopeDeclaration;
+    readonly private: TsScopeDeclaration;
+    readonly export: TsExportDeclaration;
+    type(type: TsNode): TsDeclaration;
+    equals(tsNode: TsNode): TsDeclaration;
+    interface(name: string): TsInterface;
+    enum(name: string): TsEnum;
+    class(name: string): TsClass;
+    function(name: string): TsFunctionDeclaration;
+    field(name: TsNode): TsDeclaration;
+    method(name: string): TsFunctionDeclaration;
+    const(name: string): TsDeclaration;
+    let(name: string): TsDeclaration;
+    emitWhen(condition: boolean): this;
+    loads(plugin: (self) => void): this;
 }

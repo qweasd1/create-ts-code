@@ -1,15 +1,23 @@
 import {CreateCodeConfig, TsMultilineNodeFactory, If, TsNode} from "./TsNodeFactory";
 import {tsNodeToLines} from "./util";
+import {TsObject} from "../interface/TsObject";
+import {TsChainFunctionFactory} from "./TsChainFunctionFactory";
+import {TsFunctionDeclarationFactory} from "./TsFunctionDeclarationFactory";
+import {InternalFileContext} from "../syntax/syntax";
+import {type} from "os";
 
-export class TsObjectFactory extends TsMultilineNodeFactory{
+export class TsObjectFactory extends TsMultilineNodeFactory<TsObjectFactory> implements TsObject{
+
+  context:InternalFileContext
+  public objectLiteral:{[key:string]:TsNode}
 
 
-
-  constructor(public objectLiteral:{[key:string]:TsNode} = {}){
+  constructor(objectLiteral:{[key:string]:TsNode} = {}){
     super()
+    this.objectLiteral = objectLiteral
   }
 
-  public createCodeLines(config: CreateCodeConfig): string[] {
+  _createCodeLines(config: CreateCodeConfig): string[] {
 
     if (this.isMultiline) {
       const result = ["{"]
@@ -62,9 +70,47 @@ export class TsObjectFactory extends TsMultilineNodeFactory{
     return this
   }
 
+
   has(key:string){
     return key in this.objectLiteral
   }
+
+  // if(condition: boolean) {
+  //   this.isConditionTrue = condition
+  //   return this
+  // }
+  //
+  // endif() {
+  //   this.isConditionTrue = true
+  //   return this
+  // }
+  //
+  // else() {
+  //   this.isConditionTrue = !this.isConditionTrue
+  //   return this
+  // }
+  //
+  // emitWhen(condition: boolean) {
+  //   this.isEmit = condition
+  //   return this
+  // }
+  //
+  // loads(plugin: (self) => void){
+  //   plugin(this)
+  //   return this
+  // }
+  //
+  // @If
+  // multiline(){
+  //   this.isMultiline = true
+  //   return this
+  // }
+  //
+  // @If
+  // singleline(){
+  //   this.isMultiline = false
+  //   return this
+  // }
 
 
 }

@@ -1,44 +1,84 @@
 import {CreateCodeConfig, TsNodeFactory, If} from "./TsNodeFactory";
+import {TsImport} from "../interface/TsImport";
 
 
 
 
 
-export class TsImportFacotry extends TsNodeFactory{
+export class TsImportFactory extends TsNodeFactory<TsImportFactory> implements TsImport{
 
-
-  private _importMap = new Map<string,Set<string>>()
-  private _literalImports:string[] = []
+  constructor(from:string){
+    super()
+    this.from = from
+  }
 
   @If
-  public addLiteral(importLiteral:string){
-    this._literalImports.push(importLiteral)
+  imports(...items: string[]): TsImport {
+    this.items.push(...items)
+    return this;
+  }
+
+  @If
+  importModule(): TsImport {
+    this.mode = "module"
     return this
   }
 
   @If
-  public add(from:string, items:string[] | string){
-    if(typeof items === "string"){
-      items = [items]
-    }
-
-    if(!this._importMap.has(from)){
-      this._importMap.set(from,new Set<string>())
-    }
-    items.forEach(x=>this._importMap.get(from).add(x))
+  importModuleAs(alias: string): TsImport {
+    this.mode = "alias"
+    this.alias = alias
     return this
   }
 
+  // if(condition: boolean):TsImport {
+  //   this.isConditionTrue = condition
+  //   return this
+  // }
+  //
+  // endif() {
+  //   this.isConditionTrue = true
+  //   return this
+  // }
+  //
+  // else() : TsImport {
+  //   this.isConditionTrue = !this.isConditionTrue
+  //   return this
+  // }
+  //
+  // emitWhen(condition: boolean) {
+  //   this.isEmit = condition
+  //   return this
+  // }
+  //
+  // loads(plugin: (self) => void){
+  //   plugin(this)
+  //   return this
+  // }
 
 
-  public createCodeLines(config: CreateCodeConfig): string[] {
-    const result:string[] = []
-    this._importMap.forEach((items,from)=>{
-      result.push(`import { ${Array.from(items).join(", ")} } from '${from}'`)
-    })
+  private items:string[] = []
+  private from:string
+  private mode: "items" | "alias" | "module" = "items"
+  private alias = null
 
-    this._literalImports.forEach((line)=>result.push(line))
-    return result.map(x=>x + ";")
+
+  _createCodeLines(config: CreateCodeConfig): string[] {
+    switch (this.mode){
+      case "items":
+        if(this.items.length > 0){
+          return [`import { ${this.items.join(", ")} } from '${this.from}'`]
+        }
+        else {
+          return []
+        }
+
+      case "alias":
+        return [`import * as ${this.alias} from '${this.from}'`]
+      case "module":
+        return [`import * as ${this.from} from '${this.from}'`]
+    }
+
   }
 
 }

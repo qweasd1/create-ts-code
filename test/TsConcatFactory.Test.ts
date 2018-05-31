@@ -1,6 +1,6 @@
 import {TsConcatFactory} from "../src/model/TsConcatFactory";
 import {EOL} from "os";
-import {TsFunctionFactory} from "../src/model/TsFunctionFactory";
+import {TsFunctionDeclarationFactory} from "../src/model/TsFunctionDeclarationFactory";
 
 const DEFAULT_CREATE_CODE_CONFIG = {
   indent: "  ",
@@ -21,11 +21,53 @@ it('test TsConcatFactory assign object', function () {
   expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`let t = {a:1}`)
 });
 
-it('test TsConcatFactory add prefix', function () {
+
+it('test TsConcatFactory with let', function () {
   const tsConcatFactory = new TsConcatFactory()
-    .concat("abstract ")
-    .concat(new TsFunctionFactory().setName("some").setType("method").addArgs("name:string","age:number").addReturnType("string").ignoreBody())
-  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`abstract some(name:string, age:number) : string`)
+    .let("t").type("number").equals("1") as TsConcatFactory
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`let t: number = 1`)
 });
+
+it('test TsConcatFactory with let literal', function () {
+  const tsConcatFactory = new TsConcatFactory()
+    .let("t = 1") as TsConcatFactory
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`let t = 1`)
+});
+
+it('test TsConcatFactory with const', function () {
+  const tsConcatFactory = new TsConcatFactory()
+    .const("t").type("number").equals("1") as TsConcatFactory
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`const t: number = 1`)
+});
+
+it('test TsConcatFactory with const literal', function () {
+  const tsConcatFactory = new TsConcatFactory()
+    .const("t = 1") as TsConcatFactory
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`const t = 1`)
+});
+
+it('test TsConcatFactory with field', function () {
+  const tsConcatFactory = new TsConcatFactory()
+    .field("t").type("number").equals("1") as TsConcatFactory
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`t: number = 1`)
+});
+
+
+it('test TsConcatFactory export', function () {
+  const tsConcatFactory = new TsConcatFactory()
+    .export.const("t").equals("1") as TsConcatFactory
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`export const t = 1`)
+});
+
+it('test TsConcatFactory export default', function () {
+  const tsConcatFactory = new TsConcatFactory()  as TsConcatFactory
+  tsConcatFactory.export.default.field("some")
+  expect(tsConcatFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`export default some`)
+});
+
+
+
+
+
 
 

@@ -1,9 +1,12 @@
 import { CreateCodeConfig, TsMultilineNodeFactory, TsNode } from "./TsNodeFactory";
-export declare class TsArrayFactory extends TsMultilineNodeFactory {
+import { TsArray } from "../interface/TsArray";
+import { InternalFileContext } from "../syntax/syntax";
+export declare class TsArrayFactory extends TsMultilineNodeFactory<TsArrayFactory> implements TsArray {
     arrayLiteral: TsNode[];
+    context: InternalFileContext;
     leftBracket: string;
     rightBracket: string;
     constructor(arrayLiteral?: TsNode[], mode?: "array" | "arguments");
-    createCodeLines(config: CreateCodeConfig): string[];
-    add(...tsNodes: TsNode[]): this;
+    _createCodeLines(config: CreateCodeConfig): string[];
+    push(...tsNodes: TsNode[]): TsArray;
 }

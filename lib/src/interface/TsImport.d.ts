@@ -1,8 +1,6 @@
-export interface TsImport {
+import { ITsNode } from "./TsNode";
+export interface TsImport extends ITsNode<TsImport> {
     imports(...items: string[]): TsImport;
     importModule(): TsImport;
     importModuleAs(alias: string): TsImport;
-    if(condition: boolean): TsImport;
-    else(): TsImport;
-    endif(): TsImport;
 }

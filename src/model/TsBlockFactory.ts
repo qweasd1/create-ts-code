@@ -1,11 +1,9 @@
-import {CreateCodeConfig, TsNodeFactory, If, TsNode} from "./TsNodeFactory";
+import {CreateCodeConfig, TsNodeFactory, If, TsNode, TsBodyNodeFactory} from "./TsNodeFactory";
 import {tsNodeToLines} from './util';
 
 
-export class TsBlockFactory extends TsNodeFactory {
+export class TsBlockFactory extends TsBodyNodeFactory<TsBlockFactory> {
 
-  public prefix: TsNode
-  public following: TsNode
 
   public tsNodes:TsNode[] = []
 
@@ -17,12 +15,32 @@ export class TsBlockFactory extends TsNodeFactory {
     return this
   }
 
-  createCodeLines(config: CreateCodeConfig): string[] {
+  push(...tsNodes: TsNode[]) {
+    this.tsNodes.push(...tsNodes)
+  }
+
+  remove(tsNode: TsNode) {
+    this.tsNodes.splice(this.tsNodes.indexOf(tsNode),1)
+  }
+
+
+
+  _createCodeLines(config: CreateCodeConfig): string[] {
+
     return this.tsNodes.reduce((acc:string[],current:TsNode)=>{
       acc.push(...tsNodeToLines(current,config))
       return acc
     },[]) as string[]
   }
 
+  // emitWhen(condition: boolean) {
+  //   this.isEmit = condition
+  //   return this
+  // }
+  //
+  // loads(plugin: (self) => void){
+  //   plugin(this)
+  //   return this
+  // }
 
 }

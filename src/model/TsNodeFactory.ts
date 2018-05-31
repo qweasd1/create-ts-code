@@ -1,49 +1,89 @@
 import {TsArrayFactory} from "./TsArrayFactory";
 import {TsObjectFactory} from "./TsObjectFactory";
+import {InternalFileContext} from "../syntax/syntax";
+import {TsChainFunction} from "../interface/TsChainFunction";
+import {TsImport} from "../interface/TsImport";
+import {TsIf} from "../interface/TsIf";
+import {TsFunction} from "../../lib/src/interface/TsFunction";
+import {
+  TsAbstractDeclaration, TsDeclaration, TsExportDeclaration,
+  TsScopeDeclaration
+} from "../interface/TsDeclaration";
+import {TsArray} from "../interface/TsArray";
+import {TsObject} from "../interface/TsObject";
+import {ITsBodyNodeFactory} from "../interface/TsNode";
 
 
-export abstract class TsNodeFactory {
-  isConditionTrue: boolean = true
+export abstract class TsNodeFactory<T> {
+  protected isConditionTrue: boolean = true
+  protected isEmit:boolean = true
 
-  createCode(config: CreateCodeConfig): string {
+  public createCode(config: CreateCodeConfig): string {
     return this.createCodeLines(config).join(config.EOL)
   }
 
-  public abstract createCodeLines(config: CreateCodeConfig): string[]
+  protected abstract _createCodeLines(config: CreateCodeConfig): string[]
 
-  if(condition: boolean) {
+  createCodeLines(config: CreateCodeConfig): string[] {
+    if(!this.isEmit){
+      return []
+    }
+    else {
+      return this._createCodeLines(config)
+    }
+  }
+
+  if(condition: boolean) :T {
     this.isConditionTrue = condition
-    return this
+    return <any>this
   }
 
-  endIf() {
+  endif() : T {
     this.isConditionTrue = true
-    return this
+    return <any>this
   }
 
-  else() {
+  else() : T {
     this.isConditionTrue = !this.isConditionTrue
-    return this
+    return <any>this
   }
 
+  emitWhen(condition: boolean): T {
+    this.isEmit = condition
+    return <any>this
+  }
+
+  loads(plugin: (self) => void): T {
+    plugin(this)
+    return <any>this
+  }
 
 }
 
-export abstract class TsMultilineNodeFactory extends TsNodeFactory{
+export abstract class TsMultilineNodeFactory<T> extends TsNodeFactory<T>{
   public isMultiline:boolean = false
 
   @If
-  multiline(){
+  multiline() : T{
     this.isMultiline = true
-    return this
+    return <any>this
   }
 
   @If
-  singleline(){
+  singleline() : T{
     this.isMultiline = false
-    return this
+    return <any>this
   }
+
 }
+
+export abstract class TsBodyNodeFactory<T> extends TsMultilineNodeFactory<T> implements ITsBodyNodeFactory{
+  abstract push(...tsNodes:TsNode[])
+  abstract remove(tsNode:TsNode)
+  context:InternalFileContext
+}
+
+
 
 export interface CreateCodeConfig {
   indent: string
@@ -66,7 +106,7 @@ export function If(target: any, propertyKey: string, descriptor: PropertyDescrip
     return this
   }
 };
-
-export type TsNodeElem = string | TsNodeFactory
+export type TsInterface = TsChainFunction | TsImport | TsIf  | TsFunction | TsDeclaration | TsExportDeclaration | TsScopeDeclaration | TsAbstractDeclaration | TsAbstractDeclaration | TsArray | TsObject
+export type TsNodeElem = string | TsInterface | TsNodeFactory<any>
 export type TsNode = TsNodeElem | TsNodeElem[] | { [key: string]: TsNodeElem }
 export type TsNodeBody = TsNode | Function

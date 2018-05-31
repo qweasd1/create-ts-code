@@ -1,17 +1,13 @@
 import {TsNodeBody} from "../model/TsNodeFactory";
+import {ITsMultilineNode} from "./TsNode";
 
-export interface TsFunctionDeclaration {
+export interface TsFunctionDeclaration extends ITsMultilineNode<TsFunctionDeclaration>{
   args(...args:string[]):TsFunctionDeclaration
   returns(returnType:string):TsFunctionDeclaration
   body(body:TsNodeBody):TsFunctionDeclaration
 
-  if(condition:boolean):TsFunctionDeclaration
-  else():TsFunctionDeclaration
-  endif():TsFunctionDeclaration
-  singleline():TsFunctionDeclaration
-  multiline():TsFunctionDeclaration
-}
 
-export interface TsNamedFunctionDeclaration extends TsFunctionDeclaration {
-  name(name:string):TsNamedFunctionDeclaration
+  argsMultiline():TsFunctionDeclaration
+  argsSingleline():TsFunctionDeclaration
+
 }

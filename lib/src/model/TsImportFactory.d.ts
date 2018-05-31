@@ -1,8 +1,13 @@
 import { CreateCodeConfig, TsNodeFactory } from "./TsNodeFactory";
-export declare class TsImportFacotry extends TsNodeFactory {
-    private _importMap;
-    private _literalImports;
-    addLiteral(importLiteral: string): this;
-    add(from: string, items: string[] | string): this;
-    createCodeLines(config: CreateCodeConfig): string[];
+import { TsImport } from "../interface/TsImport";
+export declare class TsImportFactory extends TsNodeFactory<TsImportFactory> implements TsImport {
+    constructor(from: string);
+    imports(...items: string[]): TsImport;
+    importModule(): TsImport;
+    importModuleAs(alias: string): TsImport;
+    private items;
+    private from;
+    private mode;
+    private alias;
+    _createCodeLines(config: CreateCodeConfig): string[];
 }

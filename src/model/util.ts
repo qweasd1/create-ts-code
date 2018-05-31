@@ -44,7 +44,7 @@ export function  tsNodeToLines(tsNode: TsNode, config: CreateCodeConfig): string
     })
   }
   else if (typeof tsNode === "object") {
-    new TsObjectFactory(tsNode).createCodeLines(config).forEach((line)=>{
+    new TsObjectFactory(tsNode as any).createCodeLines(config).forEach((line)=>{
       result.push(line)
     })
   }
