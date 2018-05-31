@@ -15,6 +15,7 @@ import { TsArrayFactory } from "../model/TsArrayFactory";
 import { TsObject } from "../interface/TsObject";
 import { TsObjectFactory } from "../model/TsObjectFactory";
 import { ITsBodyNodeFactory } from "../interface/TsNode";
+import { dstr, sstr, tstr } from "../model/util";
 export declare type $Import = (from: string) => TsImport;
 export declare type $Field = (name: string) => TsDeclaration;
 export declare type $Const = (name: string) => TsDeclaration;
@@ -58,8 +59,13 @@ export interface INewFileContext {
     $obj_(literal: {
         [key: string]: TsNode;
     }): TsObject;
-    $constructor(): TsFunctionDeclaration;
+    $str_(text: string): string;
+    $dstr_(text: string): string;
+    $sstr_(text: string): string;
+    $tstr_(text: string): string;
+    $constructor(...args: string[]): TsFunctionDeclaration;
     $annotation(name: string, ...args: TsNode[]): TsChainFunction;
+    $$annotation(name: string): TsChainFunction;
 }
 export interface InternalFileContext {
     push(body: ITsBodyNodeFactory): any;
@@ -84,6 +90,10 @@ export declare class NewFileContext implements INewFileContext, InternalFileCont
     $obj_: (literal: {
         [key: string]: TsNode;
     }) => TsObjectFactory;
+    $tstr_: typeof tstr;
+    $sstr_: typeof sstr;
+    $dstr_: typeof dstr;
+    $str_: typeof dstr;
     $field: (name: string) => TsConcatFactory;
     $line: (text?: string | number) => void;
     $class: (name: string) => TsEntityFactory;
@@ -100,8 +110,9 @@ export declare class NewFileContext implements INewFileContext, InternalFileCont
     $arrow: () => TsFunctionDeclaration;
     $arrow_: () => TsFunctionDeclaration;
     $if: $If;
-    $constructor: () => TsFunctionDeclaration;
+    $constructor: (...args: string[]) => TsFunctionDeclaration;
     $annotation: (name: string, ...args: TsNode[]) => TsChainFunction;
+    $$annotation: (name: string) => TsChainFunction;
     $from: (from: string) => TsImport;
     push(body: ITsBodyNodeFactory): void;
     pop(): void;

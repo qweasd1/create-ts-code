@@ -51,4 +51,64 @@ export function  tsNodeToLines(tsNode: TsNode, config: CreateCodeConfig): string
   return result;
 }
 
+const SINGLE_STRING_PATTERN = /['\\\n\r\u2028\u2029]/g
+const DOUBLE_STRING_PATTERN = /["\\\n\r\u2028\u2029]/g
+const TEMPLATE_STRING_PATTERN = /[`\\\n\r\u2028\u2029]/g
+export function sstr(text:string) {
+  return "'" + ('' + text).replace(SINGLE_STRING_PATTERN, function (character) {
+    switch (character) {
+      case "'":
+      case '\\':
+        return '\\' + character
+      // Four possible LineTerminator characters need to be escaped:
+      case '\n':
+        return '\\n'
+      case '\r':
+        return '\\r'
+      case '\u2028':
+        return '\\u2028'
+      case '\u2029':
+        return '\\u2029'
+    }
+  }) + "'"
+}
+
+export function dstr(text:string) {
+  return '"'+ ('' + text).replace(DOUBLE_STRING_PATTERN, function (character) {
+    switch (character) {
+      case '"':
+      case '\\':
+        return '\\' + character
+      // Four possible LineTerminator characters need to be escaped:
+      case '\n':
+        return '\\n'
+      case '\r':
+        return '\\r'
+      case '\u2028':
+        return '\\u2028'
+      case '\u2029':
+        return '\\u2029'
+    }
+  }) + '"'
+}
+
+export function tstr(text:string) {
+  return "`" + ('' + text).replace(TEMPLATE_STRING_PATTERN, function (character) {
+    switch (character) {
+      case '`':
+      case '\\':
+        return '\\' + character
+      // Four possible LineTerminator characters need to be escaped:
+      case '\n':
+        return '\\n'
+      case '\r':
+        return '\\r'
+      case '\u2028':
+        return '\\u2028'
+      case '\u2029':
+        return '\\u2029'
+    }
+  }) + "`"
+}
+
 

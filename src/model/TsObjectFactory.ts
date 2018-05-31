@@ -25,7 +25,7 @@ export class TsObjectFactory extends TsMultilineNodeFactory<TsObjectFactory> imp
       keys.forEach((key,index)=>{
         tsNodeToLines(this.objectLiteral[key], config).forEach((line,i)=>{
           if(i === 0){
-            result.push(key + ":"+ line)
+            result.push(key + ": "+ line)
           }
           else {
             result.push(line)

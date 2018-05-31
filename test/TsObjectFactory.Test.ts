@@ -21,7 +21,7 @@ it('test TsObjectFactory with single line but contains multiline element', funct
   tsObjectFactory.set("a", "b").set("c","d").set("d",new TsObjectFactory({a:"1"}).multiline())
 
   expect(tsObjectFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`{a:b, c:d, d:{
-  a:1
+  a: 1
 }}`)
 });
 
@@ -31,8 +31,8 @@ it('test TsObjectFactory with multiline', function () {
   tsObjectFactory.set("a", "b").set("c","d").multiline()
 
   expect(tsObjectFactory.createCode(DEFAULT_CREATE_CODE_CONFIG)).toEqual(`{
-  a:b, 
-  c:d
+  a: b, 
+  c: d
 }`)
 });
 

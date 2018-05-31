@@ -9,7 +9,7 @@ it('create simple code', function () {
                        $const,
                        $public, $protected, $private, $static, $abstract, $field, $export, $line, $class, $interface, $enum,
                        $ref, $invoke, $invoke_, $method, $get, $set, $function, $arrow, $constructor, $annotation,$function_, $arrow_,
-                       $array_, $obj_
+                       $array_, $obj_, $$annotation
                      }) => {
     $from("path").importModule()
     $line(2)
@@ -97,7 +97,7 @@ it('angular component', function () {
         }
       }
   }
-  console.log(file(({$class, $annotation, $method, $from, $line, $constructor, $field, $array_, $let})=>{
+  console.log(file(({$class, $annotation, $method, $from, $line, $constructor, $field, $array_, $let, $$annotation})=>{
     const isInit = true
     $from("angular/core").imports("Component").if(isInit).imports("OnInit")
 
@@ -109,11 +109,14 @@ it('angular component', function () {
     })
     $class("SomeComponent").loads(lifecyleImplements({OnInit:true,OnDestroy:true})).body(()=>{
       $line()
+      $$annotation("Log")
       $field("subs:ISubscription[] = []")
       $field("subs:ISubscription[] = []")
       
       $line()
-      $constructor().args("private http:httpClient").argsMultiline().body(()=>{
+      $constructor(
+        "private http:httpClient"
+      ).argsMultiline().body(()=>{
 
       })
 

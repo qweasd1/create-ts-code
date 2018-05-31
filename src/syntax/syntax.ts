@@ -22,6 +22,7 @@ import {TsObject} from "../interface/TsObject";
 import {TsObjectFactory} from "../model/TsObjectFactory";
 import objectContaining = jasmine.objectContaining;
 import {ITsBodyNodeFactory} from "../interface/TsNode";
+import {dstr, sstr, tstr} from "../model/util";
 
 
 // import
@@ -93,10 +94,17 @@ export interface INewFileContext {
   $array_(...items: TsNode[]): TsArray
 
   $obj_(literal: { [key: string]: TsNode }): TsObject
+  $str_(text:string):string
+  $dstr_(text:string):string
+  $sstr_(text:string):string
+  $tstr_(text:string):string
 
-  $constructor(): TsFunctionDeclaration
+  $constructor(...args:string[]): TsFunctionDeclaration
 
   $annotation(name: string, ...args: TsNode[]): TsChainFunction
+
+  // annotation without call function
+  $$annotation(name: string): TsChainFunction
 }
 
 export interface InternalFileContext {
@@ -197,6 +205,11 @@ export class NewFileContext implements INewFileContext, InternalFileContext {
     return result
   }
 
+  $tstr_ = tstr
+  $sstr_ = sstr
+  $dstr_ = dstr
+  $str_ = dstr
+
   $field = (name: string) => {
     const result = new TsConcatFactory()
     result.concat(name)
@@ -286,8 +299,8 @@ export class NewFileContext implements INewFileContext, InternalFileContext {
 
   $if: $If;
 
-  $constructor = (): TsFunctionDeclaration => {
-    return createMethodBuilder(() => this.currentBodyFactory, this, "constructor", "method")
+  $constructor = (...args:string[]): TsFunctionDeclaration => {
+    return createMethodBuilder(() => this.currentBodyFactory, this, "constructor", "method").args(...args)
   }
 
   $annotation = (name: string, ...args: TsNode[]): TsChainFunction => {
@@ -298,6 +311,15 @@ export class NewFileContext implements INewFileContext, InternalFileContext {
       args[0] = new TsObjectFactory(args[0] as any).multiline()
     }
     chain.invoke(name, ...args)
+    result.concat("@", chain)
+    this.currentBodyFactory.push(result)
+    return chain
+  }
+
+  $$annotation = (name: string): TsChainFunction => {
+    const result = new TsConcatFactory()
+    const chain = new TsChainFunctionFactory()
+    chain.ref(name)
     result.concat("@", chain)
     this.currentBodyFactory.push(result)
     return chain
