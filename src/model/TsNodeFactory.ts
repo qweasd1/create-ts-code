@@ -107,6 +107,6 @@ export function If(target: any, propertyKey: string, descriptor: PropertyDescrip
   }
 };
 export type TsInterface = TsChainFunction | TsImport | TsIf  | TsFunction | TsDeclaration | TsExportDeclaration | TsScopeDeclaration | TsAbstractDeclaration | TsAbstractDeclaration | TsArray | TsObject
-export type TsNodeElem = string | TsInterface | TsNodeFactory<any>
+export type TsNodeElem =  TsInterface | TsNodeFactory<any> | string | number | boolean | undefined | null
 export type TsNode = TsNodeElem | TsNodeElem[] | { [key: string]: TsNodeElem }
 export type TsNodeBody = TsNode | Function

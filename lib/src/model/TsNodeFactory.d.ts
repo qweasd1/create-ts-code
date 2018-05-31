@@ -42,7 +42,7 @@ export interface CreateCodeConfig {
  */
 export declare function If(target: any, propertyKey: string, descriptor: PropertyDescriptor): void;
 export declare type TsInterface = TsChainFunction | TsImport | TsIf | TsFunction | TsDeclaration | TsExportDeclaration | TsScopeDeclaration | TsAbstractDeclaration | TsAbstractDeclaration | TsArray | TsObject;
-export declare type TsNodeElem = string | TsInterface | TsNodeFactory<any>;
+export declare type TsNodeElem = TsInterface | TsNodeFactory<any> | string | number | boolean | undefined | null;
 export declare type TsNode = TsNodeElem | TsNodeElem[] | {
     [key: string]: TsNodeElem;
 };
